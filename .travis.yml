@@ -57,7 +57,6 @@ before_install:
   - mv external-* binaries
   - if [ "$CXX" == "clang++" ]; then sudo tar xf $CACHE_DIR/objgen-clang.tar.bz2; fi
   - if [ "$CXX" != "clang++" ]; then sudo tar xf $CACHE_DIR/objgen-gcc5.tar.bz2; fi
-  - mkdir deps
   - mv objgen-* deps/objgen
   - chmod +x binaries/ttvfs/bin/ttvfs_gen
   - if [ "$CXX" == "clang++" ]; then cd /opt; fi
