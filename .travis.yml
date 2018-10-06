@@ -1,0 +1,82 @@
+sudo: required
+dist: trusty
+language: cpp
+
+cache:
+  directories:
+    - cache
+
+matrix:
+  include:
+    - compiler: clang
+      env:
+        - COMPILER_CC=clang
+        - COMPILER_CXX=clang++
+        - BUILD_NAME=clang
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env:
+        - COMPILER_CC=gcc-5
+        - COMPILER_CXX=g++-5
+        - BUILD_NAME=gcc5
+
+before_install:
+  - export ROOT_DIR=`pwd`
+  - export CACHE_DIR=`pwd`/cache
+  - export COVERALLS_ENABLE=OFF
+  - export COVERALLS_SERVICE_NAME=travis-ci
+  - cd ${CACHE_DIR}
+  - if [ ! -f ninja-linux.zip ]; then wget https://github.com/ninja-build/ninja/releases/download/v1.7.1/ninja-linux.zip; fi
+  - if [ ! -f cmake-3.6.1-Linux-x86_64.tar.gz ]; then wget -q https://cmake.org/files/v3.6/cmake-3.6.1-Linux-x86_64.tar.gz; fi
+  - if [ ! -f clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz ]; then wget -q http://llvm.org/releases/3.8.0/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz; fi
+  - if [ ! -f external-0.1.1-clang.tar.bz2 ]; then wget -q https://github.com/comphack/external/releases/download/external-18/external-0.1.1-clang.tar.bz2; fi
+  - if [ ! -f external-0.1.1-gcc5.tar.bz2 ]; then wget -q https://github.com/comphack/external/releases/download/external-18/external-0.1.1-gcc5.tar.bz2; fi
+  - ls -lh
+  - cd ${ROOT_DIR}
+  - sudo apt-get update -q
+  - sudo apt-get install libssl-dev unzip -y
+  - sudo mkdir -p /opt/ninja/bin
+  - cd /opt/ninja/bin
+  - sudo unzip $CACHE_DIR/ninja-linux.zip
+  - sudo chmod 755 ninja
+  - export PATH="/opt/ninja/bin:${PATH}"
+  - cd /opt
+  - sudo tar xf $CACHE_DIR/cmake-3.6.1-Linux-x86_64.tar.gz
+  - export PATH="/opt/cmake-3.6.1-Linux-x86_64/bin:${PATH}"
+  - export LD_LIBRARY_PATH="/opt/cmake-3.6.1-Linux-x86_64/lib"
+  - cd ${ROOT_DIR}
+  - if [ "$CXX" == "clang++" ]; then sudo tar xf $CACHE_DIR/external-0.1.1-clang.tar.bz2; fi
+  - if [ "$CXX" != "clang++" ]; then sudo tar xf $CACHE_DIR/external-0.1.1-gcc5.tar.bz2; fi
+  - mv external-* binaries
+  - chmod +x binaries/ttvfs/bin/ttvfs_gen
+  - if [ "$CXX" == "clang++" ]; then cd /opt; fi
+  - if [ "$CXX" == "clang++" ]; then sudo tar xf $CACHE_DIR/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz; fi
+  - if [ "$CXX" == "clang++" ]; then export PATH="/opt/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04/bin:${PATH}"; fi
+  - if [ "$CXX" == "clang++" ]; then export LD_LIBRARY_PATH="/opt/clang+llvm-3.8.0-x86_64-linux-gnu-ubuntu-14.04/lib:${LD_LIBRARY_PATH}"; fi
+  - if [ "$CXX" == "clang++" ]; then cd ${ROOT_DIR}; fi
+  - export CC="${COMPILER_CC}"
+  - export CXX="${COMPILER_CXX}"
+  - export CTEST_OUTPUT_ON_FAILURE=1
+
+script:
+  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then mkdir -p build && cd build && cmake -DBUILD_OPTIMIZED=OFF .. && cmake --build . ; fi
+#  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then cmake --build . --target test ; fi
+  - if [ "${COVERITY_SCAN_BRANCH}" != 1 ]; then cmake --build . --target package ; fi
+  - mv libobjects-*.tar.bz2 libobjects-${BUILD_NAME}.tar.bz2
+
+deploy:
+  provider: releases
+  api_key:
+    secure: PD/5vIlz1MQd7pOz0eJxzWvH3p2T/npsdINuPsOhAB8skOc+OvGcSq6PKuqmJpLx0/fmno3UeoRt3RP29iAJvsEjI+EhmZS+n65illo1IkTRMoRpHsJBompiI9F8bpbEh6ImtXN27XjW0gyIg/uA/5sLRcJtVuSWeBtA3AFuo9RlaHLGZ0KMQ3CI3ueWXirTXALJHOOFmUhBKtaEid/zVJsvg9bponwq2Jn0PztoaM8RmhUXpcOhGlpgXtx8Av25RRa0jkd/XGFoXAK//3svtq2DUBm6XGaamkYo6HJjVO4C0bMvJzenoqjGkIQ3fUFo5YvIsw7bm2GDARVJhWgrbe8PFEXgEMOKue60uEPUrVnpgOEgD50HkF2sgiL8k6f1GUlS58kbu5AyhDP/p5LGbDvIHUNxAJ6dqUNlLud5WVsTMzUwYt8hMlFMh9At74q60UXhl4nkc5WGtfbCsqQDqbGxbMAayPVmWtnjvt6JavU7D2XWd3gE7PiOESTIlHlbLcmiepHNvPEmzRMRQpbYXBJWuDiNdr9t5iyGb7Wl2LJq8tY7nb4BPhqvSdJ8YWu5wkK5BSoE4sjxPdr3RCVhVqiH9vAl3QWhVU7p3ItbrcvFyL13R+Ug74dgVnKKnEMOE2op54SxfbKGOgI0vWzhdUFGeWydmFWADsNJeKFQhxA=
+  skip_cleanup: true
+  file_glob: true
+  file: libobjects-*.tar.bz2
+  on:
+    repo: comphack/libobjects
+    branch: develop
+    tags: true
