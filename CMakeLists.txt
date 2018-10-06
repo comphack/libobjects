@@ -166,7 +166,7 @@ ENDIF()
 ADD_EXECUTABLE(comp_objgen IMPORTED)
 IF(WIN32)
     SET_TARGET_PROPERTIES(comp_objgen PROPERTIES IMPORTED_LOCATION
-        "${CMAKE_SOURCE_DIR}/deps/objgen/bin/comp_objgen.exe")
+        "${CMAKE_SOURCE_DIR}/deps/objgen/comp_objgen.exe")
 ELSE()
     SET_TARGET_PROPERTIES(comp_objgen PROPERTIES IMPORTED_LOCATION
         "${CMAKE_SOURCE_DIR}/deps/objgen/bin/comp_objgen")
