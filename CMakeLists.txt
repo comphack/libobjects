@@ -164,8 +164,13 @@ ENDIF()
 
 # Add in the build of libobjgen and comp_objgen.
 ADD_EXECUTABLE(comp_objgen IMPORTED)
-SET_TARGET_PROPERTIES(comp_objgen PROPERTIES IMPORTED_LOCATION
-    "${CMAKE_SOURCE_DIR}/deps/objgen/bin/comp_objgen")
+IF(WIN32)
+    SET_TARGET_PROPERTIES(comp_objgen PROPERTIES IMPORTED_LOCATION
+        "${CMAKE_SOURCE_DIR}/deps/objgen/bin/comp_objgen.exe")
+ELSE()
+    SET_TARGET_PROPERTIES(comp_objgen PROPERTIES IMPORTED_LOCATION
+        "${CMAKE_SOURCE_DIR}/deps/objgen/bin/comp_objgen")
+ENDIF(WIN32)
 
 # PDB not found for library.
 ADD_LINKER_FLAGS(AUTO /ignore:4099)
