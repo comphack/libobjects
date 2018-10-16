@@ -72,6 +72,7 @@ SET(${PROJECT_NAME}_SCHEMA
     schema/packet_login_reply.xml
     schema/packet_response_code.xml
     schema/party.xml
+    schema/promo.xml
     schema/qmp_file.xml
     schema/registeredchannel.xml
     schema/registeredworld.xml
@@ -337,6 +338,10 @@ OBJGEN_XML(${PROJECT_NAME}_STRUCTS
     PlasmaSpawn.cpp
     PostItem.h
     PostItem.cpp
+    Promo.h
+    Promo.cpp
+    PromoExchange.h
+    PromoExchange.cpp
     PvPMatch.h
     PvPMatch.cpp
     QmpFile.h
