@@ -224,6 +224,8 @@ OBJGEN_XML(${PROJECT_NAME}_STRUCTS
     ClanInfo.cpp
     ClanMember.h
     ClanMember.cpp
+    ChannelLogin.h
+    ChannelLogin.cpp
     CharacterLogin.h
     CharacterLogin.cpp
     CharacterProgress.h
@@ -308,6 +310,8 @@ OBJGEN_XML(${PROJECT_NAME}_STRUCTS
     Hotbar.cpp
     InheritedSkill.h
     InheritedSkill.cpp
+    InstanceAccess.h
+    InstanceAccess.cpp
     ItemBox.h
     ItemBox.cpp
     ItemDrop.h
