@@ -13,10 +13,6 @@ configuration:
 #  - Release
   - RelWithDebInfo
 
-install:
-  - cinst doxygen.portable
-  - cinst doxygen.portable graphviz.portable
-
 init:
   - if %platform%==x64 (set generator=Visual Studio 14 2015 Win64) else (set generator=Visual Studio 14 2015)
   - if %platform%==x64 (set msplatform=x64) else (set msplatform=Win32)

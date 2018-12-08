@@ -52,6 +52,7 @@ SET(${PROJECT_NAME}_SCHEMA
     schema/action_updatezoneflags.xml
     schema/action_zonechange.xml
     schema/action_zoneinstance.xml
+    schema/ailogic.xml
     schema/character.xml
     schema/clan.xml
     schema/databaseconfig.xml
@@ -214,6 +215,8 @@ OBJGEN_XML(${PROJECT_NAME}_STRUCTS
     ActionZoneInstance.cpp
     ActionZoneChange.h
     ActionZoneChange.cpp
+    AILogicGroup.h
+    AILogicGroup.cpp
     BazaarData.h
     BazaarData.cpp
     BazaarItem.h
