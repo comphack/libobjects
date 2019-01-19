@@ -35,7 +35,7 @@
 #include "SqratInt64.h"
 
 // We want to wrap 64-bit integers a different way to preserve the value.
-#define SQRAT_WRAP_INTEGER64 1
+// #define SQRAT_WRAP_INTEGER64 1
 
 #ifdef SQRAT_WRAP_INTEGER64
 #define SQRAT_OMIT_INT64 1
