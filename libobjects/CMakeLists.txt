@@ -451,6 +451,8 @@ OBJGEN_XML(${PROJECT_NAME}_STRUCTS
     TestObjectC.cpp
     TestObjectD.h
     TestObjectD.cpp
+    TestObjectE.h
+    TestObjectE.cpp
     Tokusei.h
     Tokusei.cpp
     TokuseiAspect.h
